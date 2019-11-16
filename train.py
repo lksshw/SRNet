@@ -12,7 +12,7 @@ from skimage.transform import resize
 from skimage import io
 from model import SRNet
 from torchvision import models, transforms, datasets
-import loss
+from loss import build_generator_loss, build_discriminator_loss
 from datagen import datagen_srnet, example_dataset, To_tensor
 
 
