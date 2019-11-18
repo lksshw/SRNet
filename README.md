@@ -1,4 +1,7 @@
 # SRNet
 A pytorch implementation of the SRNet architecture from the paper Editing text in the wild (Liang Wu et al.)
 
-In Progress
+Original tensorflow implementation: https://github.com/youdao-ai/SRNet
+This implementation includes a few changes to the discriminator, datagenerator and the training process.  
+
+Update to follow. 
