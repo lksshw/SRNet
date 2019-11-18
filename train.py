@@ -6,14 +6,15 @@ import os
 import torch
 import torchvision.transforms
 from utils import *
-from datagen import srnet_datagen, gen_input_data
 import cfg
+from tqdm import tqdm
 from skimage.transform import resize
 from skimage import io
-from model import SRNet
+from model import Generator, Discriminator, Vgg19
 from torchvision import models, transforms, datasets
 from loss import build_generator_loss, build_discriminator_loss
 from datagen import datagen_srnet, example_dataset, To_tensor
+from torch.utils.data import Dataset, DataLoader
 
 
 def requires_grad(model, flag=True):
@@ -26,18 +27,18 @@ def custom_collate(batch):
     t_sk_batch, t_t_batch, t_b_batch, t_f_batch = [], [], [], []
     mask_t_batch = []
     
+    w_sum = 0
+
     for item in batch:
         
         t_b= item[4]
-        
-        w_sum = 0
         h, w = t_b.shape[:2]
         scale_ratio = cfg.data_shape[0] / h
         w_sum += int(w * scale_ratio)
         
     to_h = cfg.data_shape[0]
     to_w = w_sum // cfg.batch_size
-    to_w = int(round(to_w / 8)) * 8
+    to_w = 128 #int(round(to_w / 8)) * 8
     to_scale = (to_h, to_w)
     
     for item in batch:
@@ -101,12 +102,10 @@ def main():
     train_name = get_train_name()
     
     print_log('Initializing SRNET', content_color = PrintColor['yellow'])
-    model = SRNet(shape = cfg.data_shape, name = train_name)
-    print_log('model compiled.', content_color = PrintColor['yellow'])
     
     train_data = datagen_srnet(cfg)
     
-    train_data = DataLoader(dataset = train_data, batch_size = cfg.batch_size, shuffle = False, collate = custom_collate,  pin_memory = True)
+    train_data = DataLoader(dataset = train_data, batch_size = cfg.batch_size, shuffle = False, collate_fn = custom_collate,  pin_memory = True)
     
     trfms = To_tensor()
     example_data = example_dataset(transform = trfms)
@@ -117,9 +116,9 @@ def main():
         
     G = Generator(in_channels = 3).cuda()
     
-    D1 = discriminator(in_channels = 6).cuda()
+    D1 = Discriminator(in_channels = 6).cuda()
     
-    D2 = discriminator(in_channels = 6).cuda()
+    D2 = Discriminator(in_channels = 6).cuda()
         
     vgg_features = Vgg19().cuda()    
         
@@ -152,7 +151,7 @@ def main():
         D1.zero_grad()
         D2.zero_grad()
         
-        if ((step+1) % save_ckpt_interval == 0):
+        if ((step+1) % cfg.save_ckpt_interval == 0):
             
             torch.save(
                 {
@@ -167,11 +166,19 @@ def main():
             )
                 
         i_t, i_s, t_sk, t_t, t_b, t_f, mask_t = trainiter.next()
-        
-        inputs = [i_t, i_s]
+                
+        i_t = i_t.cuda()
+        i_s = i_s.cuda()
+        t_sk = t_sk.cuda()
+        t_t = t_t.cuda()
+        t_b = t_b.cuda()
+        t_f = t_f.cuda()
+        mask_t = mask_t.cuda()
+                
+        #inputs = [i_t, i_s]
         labels = [t_sk, t_t, t_b, t_f]
         
-        o_sk, o_t, o_b, o_f = G(inputs)
+        o_sk, o_t, o_b, o_f = G(i_t, i_s)
         
         i_db_true = torch.cat((t_b, i_s), dim = 1)
         i_db_pred = torch.cat((o_b, i_s), dim = 1)
@@ -239,7 +246,7 @@ def main():
             
             print('Iter: {}/{} | Gen: {} | D_bg: {} | D_fus: {}'.format(step+1, cfg.max_iter, g_loss.item(), db_loss.item(), df_loss.item()))
             
-        if ((step+1) % gen_example_interval == 0):
+        if ((step+1) % cfg.gen_example_interval == 0):
             
             savedir = os.path.join(cfg.example_result_dir, train_name, 'iter-' + str(step+1).zfill(len(str(cfg.max_iter))))
             
@@ -255,9 +262,7 @@ def main():
                 o_sk = skimage.img_as_ubyte(o_sk)
                 o_t = skimage.img_as_ubyte(o_t + 1)
                 o_b = skimage.img_as_ubyte(o_b + 1)
-                o_f = skimage.img_as_ubyte(o_f + 1)
-                
-                                           
+                o_f = skimage.img_as_ubyte(o_f + 1)                         
                                            
                 io.imsave(os.path.join(save_dir, name + 'o_f.png'), o_f)
                 

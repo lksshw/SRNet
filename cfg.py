@@ -25,7 +25,7 @@ checkpoint_savedir = 'logs/'
 # data
 batch_size = 8
 data_shape = [64, None]
-data_dir = 'srnet_data/'
+data_dir = '/lakshwin12/Gan/fonts/SRNet-Datagen/srnet_data'
 i_t_dir = 'i_t'
 i_s_dir = 'i_s'
 t_sk_dir = 't_sk'
