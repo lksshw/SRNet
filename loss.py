@@ -1,18 +1,6 @@
 import torch
 import cfg
 
-def compute_loss(gen_op, desc_op, out_vgg, labels):
-    
-    d_loss_bin = build_discriminator_loss(desc_op[0], desc_op[1])
-    
-    d_loss_fus = build_discriminator_loss(desc_op[2], desc_op[3])
-    
-    g_loss, detail = build_generator_loss(gen_op, desc_op, out_vgg, labels)
-    
-    d_loss = torch.add(d_loss_bin, d_loss_fus)
-    
-    return d_loss, g_loss , detail
-    
 
 def build_discriminator_loss(x_true, x_fake):
 
@@ -46,18 +34,19 @@ def build_perceptual_loss(x):
     return l
 
 def build_gram_matrix(x):
-        
-    x_shape = torch.shape(x)
-    c, w, h = x_shape[1], x_shape[2], x_shape[3]
+
+    x_shape = x.shape
+    c, h, w = x_shape[1], x_shape[2], x_shape[3]
     matrix = x.view((-1, c, h * w))
-    gram = torch.mm(torch.t(matrix), matrix) / (h * w * c)
+    matrix1 = torch.transpose(matrix, 1, 2)
+    gram = torch.matmul(matrix, matrix1) / (h * w * c)
     return gram
 
 def build_style_loss(x):
         
     l = []
     for i, f in enumerate(x):
-        f_shape = torch.shape(f[0])
+        f_shape = f[0].shape[0] * f[0].shape[1] *f[0].shape[2]
         f_norm = 1. / f_shape
         gram_true = build_gram_matrix(f[0])
         gram_pred = build_gram_matrix(f[1])
@@ -84,7 +73,7 @@ def build_gan_loss(x_pred):
 def build_generator_loss(out_g, out_d, out_vgg, labels):
         
     o_sk, o_t, o_b, o_f, mask_t = out_g
-    o_db_true, o_db_pred, o_df_true, o_df_pred = out_d
+    o_db_pred, o_df_pred = out_d
     o_vgg = out_vgg
     t_sk, t_t, t_b, t_f = labels
     

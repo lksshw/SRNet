@@ -371,6 +371,7 @@ class Discriminator(torch.nn.Module):
         
         self.bn_4 = torch.nn.BatchNorm2d(1)
         
+        #self.lin_1 = torch.nn.Linear(1, 1)
      
     def forward(self, x):
         

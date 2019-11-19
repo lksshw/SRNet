@@ -1,4 +1,4 @@
-gpu = 0
+gpu = 1
 
 lt = 1.
 lt_alpha = 1.

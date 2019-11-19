@@ -145,6 +145,8 @@ def main():
     
     trainiter = iter(train_data)
     example_iter = iter(example_loader)
+    
+    K = torch.nn.ZeroPad2d((0, 1, 1, 0))
 
     for step in tqdm(range(cfg.max_iter)):
         
@@ -180,6 +182,15 @@ def main():
         
         o_sk, o_t, o_b, o_f = G(i_t, i_s)
         
+        o_sk = K(o_sk)
+        o_t = K(o_t)
+        o_b = K(o_b)
+        o_f = K(o_f)
+                
+        #print(o_sk.shape, o_t.shape, o_b.shape, o_f.shape)
+        #print('------')
+        #print(i_s.shape)
+        
         i_db_true = torch.cat((t_b, i_s), dim = 1)
         i_db_pred = torch.cat((o_b, i_s), dim = 1)
         
@@ -200,17 +211,10 @@ def main():
         
         df_loss = build_discriminator_loss(o_df_true, o_df_pred)
                 
-        out_g = [o_sk, o_t, o_b, o_f, mask_t]
-        
-        out_d = [o_db_true, o_db_pred, o_df_true, o_df_pred]
-        
-        g_loss, detail = build_generator_loss(out_g, out_d, out_vgg, labels)
-        
         db_loss.backward()
         df_loss.backward()
         
         D1_solver.step()
-        
         D2_solver.step()
         
         d1_scheduler.step()
@@ -222,21 +226,50 @@ def main():
         
         if ((step+1) % 5 == 0):
             
+            G.zero_grad()
+            
             requires_grad(G, True)
 
             requires_grad(D1, False)
             requires_grad(D2, False)
             
-            G.zero_grad()
+            o_sk, o_t, o_b, o_f = G(i_t, i_s)
             
+            o_sk = K(o_sk)
+            o_t = K(o_t)
+            o_b = K(o_b)
+            o_f = K(o_f)
+
+            #print(o_sk.shape, o_t.shape, o_b.shape, o_f.shape)
+            #print('------')
+            #print(i_s.shape)
+
+            i_db_true = torch.cat((t_b, i_s), dim = 1)
+            i_db_pred = torch.cat((o_b, i_s), dim = 1)
+
+            i_df_true = torch.cat((t_f, i_t), dim = 1)
+            i_df_pred = torch.cat((o_f, i_t), dim = 1)
+
+            o_db_pred = D1(i_db_pred)
+
+            o_df_pred = D2(i_df_pred)
+
+            i_vgg = torch.cat((t_f, o_f), dim = 0)
+
+            out_vgg = vgg_features(i_vgg)
+            
+            out_g = [o_sk, o_t, o_b, o_f, mask_t]
+        
+            out_d = [o_db_pred, o_df_pred]
+        
+            g_loss, detail = build_generator_loss(out_g, out_d, out_vgg, labels)    
+                
             g_loss.backward()
             
             G_solver.step()
             
             g_scheduler.step()
-            
-            clip_grad(G)
-            
+                        
             requires_grad(G, False)
 
             requires_grad(D1, True)
