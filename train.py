@@ -150,8 +150,8 @@ def main():
 
     for step in tqdm(range(cfg.max_iter)):
         
-        D1.zero_grad()
-        D2.zero_grad()
+        D1_solver.zero_grad()
+        D2_solver.zero_grad()
         
         if ((step+1) % cfg.save_ckpt_interval == 0):
             
@@ -226,12 +226,12 @@ def main():
         
         if ((step+1) % 5 == 0):
             
-            G.zero_grad()
-            
             requires_grad(G, True)
 
             requires_grad(D1, False)
             requires_grad(D2, False)
+            
+            G_solver.zero_grad()
             
             o_sk, o_t, o_b, o_f = G(i_t, i_s)
             
