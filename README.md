@@ -4,6 +4,8 @@ A pytorch implementation of the SRNet architecture from the paper Editing text i
 Original tensorflow implementation: https://github.com/youdao-ai/SRNet
 This implementation includes a few changes to the discriminator, datagenerator and the training process.  
 
+Final Srnet code pushed. Training is even more stable. Another addition is that this repo sets up the entire dataset for you and helps you train by running just two scripts. Instructions of usage to follow in README.
+
 TO DO:
 
 1) Final README
