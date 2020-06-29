@@ -1,12 +1,13 @@
 # author: Niwhskal
-# github : https://github.com/test13234/SRNet
+# github : https://github.com/Niwhskal/SRNet
 
 import os
 from skimage import io
 from skimage.transform import resize
 import numpy as np
 import random
-import cfg 
+import cfg
+import torch
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 
@@ -46,6 +47,7 @@ class example_dataset(Dataset):
         self.files = os.listdir(data_dir)
         self.files = [i.split('_')[0] + '_' for i in self.files]
         self.files = list(set(self.files))
+        self.transform = transform
         
     def __len__(self):
         return len(self.files)
@@ -65,7 +67,7 @@ class example_dataset(Dataset):
         i_t = resize(i_t, to_scale)
         i_s = resize(i_s, to_scale)
         
-        sample = sample
+        sample = (i_t, i_s, img_name)
         
         if self.transform:
             sample = self.transform(sample)
@@ -76,11 +78,14 @@ class example_dataset(Dataset):
 class To_tensor(object):
     def __call__(self, sample):
         
-        i_t, i_s, (h, w), img_name = sample
-        
+        i_t, i_s, img_name = sample
+
         i_t = i_t.transpose((2, 0, 1)) /127.5 -1
         i_s = i_s.transpose((2, 0, 1)) /127.5 -1
-        
-        return 
+
+        i_t = torch.from_numpy(i_t)
+        i_s = torch.from_numpy(i_s)
+
+        return (i_t.float(), i_s.float(), img_name)
         
     

@@ -4,7 +4,7 @@ import cfg
 
 def build_discriminator_loss(x_true, x_fake):
 
-    d_loss = -(torch.mean(x_true) - torch.mean(x_fake))
+    d_loss = -torch.mean(torch.log(torch.clamp(x_true, cfg.epsilon, 1.0)) + torch.log(torch.clamp(1.0 - x_fake, cfg.epsilon, 1.0)))
     return d_loss
 
 def build_dice_loss(x_t, x_o):
@@ -13,7 +13,7 @@ def build_dice_loss(x_t, x_o):
     tflat = x_t.view(-1)
     intersection = (iflat*tflat).sum()
     
-    return 1. - ((2. * intersection + cfg.epsilon)/(iflat.sum() +tflat.sum()+ cfg.epsilon))
+    return 1. - torch.mean((2. * intersection + cfg.epsilon)/(iflat.sum() +tflat.sum()+ cfg.epsilon))
 
 def build_l1_loss(x_t, x_o):
         
@@ -66,7 +66,7 @@ def build_vgg_loss(x):
 
 def build_gan_loss(x_pred):
     
-    gen_loss = -torch.mean(x_pred)
+    gen_loss = -torch.mean(torch.log(torch.clamp(x_pred, cfg.epsilon, 1.0)))
     
     return gen_loss
 

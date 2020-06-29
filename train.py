@@ -1,5 +1,5 @@
 # author: Niwhskal
-# github : https://github.com/test13234/SRNet
+# github : https://github.com/Niwhskal/SRNet
 
 import numpy as np
 import os
@@ -8,6 +8,7 @@ import torchvision.transforms
 from utils import *
 import cfg
 from tqdm import tqdm
+import torchvision.transforms.functional as F
 from skimage.transform import resize
 from skimage import io
 from model import Generator, Discriminator, Vgg19
@@ -110,7 +111,7 @@ def main():
     trfms = To_tensor()
     example_data = example_dataset(transform = trfms)
         
-    example_loader = DataLoader(dataset = example_data, batch_size = len(example_data), shuffle = False)
+    example_loader = DataLoader(dataset = example_data, batch_size = 1, shuffle = False)
     
     print_log('training start.', content_color = PrintColor['yellow'])
         
@@ -131,7 +132,30 @@ def main():
     d1_scheduler = torch.optim.lr_scheduler.MultiStepLR(D1_solver, milestones=[30, 200], gamma=0.5)
     
     d2_scheduler = torch.optim.lr_scheduler.MultiStepLR(D2_solver, milestones=[30, 200], gamma=0.5)
+
+    try:
     
+      checkpoint = torch.load(cfg.ckpt_path)
+      G.load_state_dict(checkpoint['generator'])
+      D1.load_state_dict(checkpoint['discriminator1'])
+      D2.load_state_dict(checkpoint['discriminator2'])
+      G_solver.load_state_dict(checkpoint['g_optimizer'])
+      D1_solver.load_state_dict(checkpoint['d1_optimizer'])
+      D2_solver.load_state_dict(checkpoint['d2_optimizer'])
+      
+      '''
+      g_scheduler.load_state_dict(checkpoint['g_scheduler'])
+      d1_scheduler.load_state_dict(checkpoint['d1_scheduler'])
+      d2_scheduler.load_state_dict(checkpoint['d2_scheduler'])
+      '''
+
+      print('Resuming after loading...')
+
+    except FileNotFoundError:
+
+      print('checkpoint not found')
+      pass  
+
     requires_grad(G, False)
 
     requires_grad(D1, True)
@@ -157,17 +181,27 @@ def main():
             
             torch.save(
                 {
-                    'generator': G.module.state_dict(),
-                    'discriminator1': D1.module.state_dict(),
-                    'discriminator2': D2.module.state_dict(),
+                    'generator': G.state_dict(),
+                    'discriminator1': D1.state_dict(),
+                    'discriminator2': D2.state_dict(),
                     'g_optimizer': G_solver.state_dict(),
                     'd1_optimizer': D1_solver.state_dict(),
                     'd2_optimizer': D2_solver.state_dict(),
+                    'g_scheduler' : g_scheduler.state_dict(),
+                    'd1_scheduler':d1_scheduler.state_dict(),
+                    'd2_scheduler':d2_scheduler.state_dict(),
                 },
-                f'checkpoint/train_step-{step+1}.model',
+                cfg.checkpoint_savedir+f'train_step-{step+1}.model',
             )
-                
-        i_t, i_s, t_sk, t_t, t_b, t_f, mask_t = trainiter.next()
+        
+        try:
+
+          i_t, i_s, t_sk, t_t, t_b, t_f, mask_t = trainiter.next()
+
+        except StopIteration:
+
+          trainiter = iter(train_data)
+          i_t, i_s, t_sk, t_t, t_b, t_f, mask_t = trainiter.next()
                 
         i_t = i_t.cuda()
         i_s = i_s.cuda()
@@ -284,24 +318,40 @@ def main():
             savedir = os.path.join(cfg.example_result_dir, train_name, 'iter-' + str(step+1).zfill(len(str(cfg.max_iter))))
             
             with torch.no_grad():
+
+                try:
+
+                  inp = example_iter.next()
                 
-                inp = example_iter.next()
+                except StopIteration:
+
+                  example_iter = iter(example_loader)
+                  inp = example_iter.next()
                 
-                o_sk, o_t, o_b, o_f = G(inp)
+                i_t = inp[0].cuda()
+                i_s = inp[1].cuda()
+                name = str(inp[2][0])
                 
-                if not os.path.exists(save_dir):
-                    os.makedirs(save_dir)
-                    
-                o_sk = skimage.img_as_ubyte(o_sk)
-                o_t = skimage.img_as_ubyte(o_t + 1)
-                o_b = skimage.img_as_ubyte(o_b + 1)
-                o_f = skimage.img_as_ubyte(o_f + 1)                         
-                                           
-                io.imsave(os.path.join(save_dir, name + 'o_f.png'), o_f)
+                o_sk, o_t, o_b, o_f = G(i_t, i_s)
+
+                o_sk = o_sk.squeeze(0).to('cpu')
+                o_t = o_t.squeeze(0).to('cpu')
+                o_b = o_b.squeeze(0).to('cpu')
+                o_f = o_f.squeeze(0).to('cpu')
                 
-                io.imsave(os.path.join(save_dir, name + 'o_sk.png'), o_sk)
-                io.imsave(os.path.join(save_dir, name + 'o_t.png'), o_t)
-                io.imsave(os.path.join(save_dir, name + 'o_b.png'), o_b)
+                if not os.path.exists(savedir):
+                    os.makedirs(savedir)
+                
+                o_sk = F.to_pil_image((o_sk)*255.0)
+                o_t = F.to_pil_image((o_t + 1)*127.5)
+                o_b = F.to_pil_image((o_b + 1)*127.5)
+                o_f = F.to_pil_image((o_f + 1)*127.5)
+                               
+                o_f.save(os.path.join(savedir, name + 'o_f.png'))
+                
+                o_sk.save(os.path.join(savedir, name + 'o_sk.png'))
+                o_t.save(os.path.join(savedir, name + 'o_t.png'))
+                o_b.save(os.path.join(savedir, name + 'o_b.png'))
                 
 if __name__ == '__main__':
     main()
