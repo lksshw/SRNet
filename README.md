@@ -6,7 +6,10 @@ This implementation includes a few changes to the discriminator, datagenerator a
 
 UPDATE [29th June]
 
-Final Srnet code pushed. Training is even more stable. Another addition is that this repo sets up the entire dataset for you and helps you train by running just two scripts. Instructions of usage to follow in README.
+Final Srnet code pushed. 
+Model training is extremely stable. (README will elaborate on this).
+This repository sets up the entire dataset and all dependencies, enabling you to start training by running just two scripts.
+Instructions of usage to follow in README.
 
 TO DO:
 
