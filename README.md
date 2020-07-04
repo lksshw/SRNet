@@ -11,9 +11,9 @@ Model training is extremely stable. (README will elaborate on this).
 This repository sets up the entire dataset and all dependencies, enabling you to start training by running just two scripts.
 Instructions of usage to follow in README.
 
-TO DO:
+UPDATE [4th July]
 
-1) Final README
-2) SRNet Demo upload 
+1) Final README - In progress
+2) SRNet Demo upload - DONE
 
-Expected by 2nd July 2020 
+Expected by 5th July 2020 
