@@ -2,6 +2,7 @@
 
 This repository presents SRNet ([Liang Wu et al](https://arxiv.org/pdf/1908.03047.pdf)), a neural network that tackles the problem of text editing in images. It marks the inception of an area of research that could automate advanced editing mechanisms in the future. 
 
+<<<<<<< HEAD
 SRNet is a twin discriminator generative adversarial network that can edit text in any image while maintaining context of the background, font style and color. The demo below showcases one such use case. Movie poster editing.
 
 ![](media/final.gif)
@@ -82,3 +83,18 @@ Code for the demo is hastily written and is quite slow. If anyone is interested 
 * [SynthText project](https://github.com/ankush-me/SynthText): This work provides the background dataset that is instrumental for data synthesis.
 
 * [Streamlit docs](https://www.streamlit.io/): One of the best libraries to build and publish apps. Severely underrated.
+=======
+UPDATE [29th June]
+
+Final Srnet code pushed. 
+Model training is extremely stable. (README will elaborate on this).
+This repository sets up the entire dataset and all dependencies, enabling you to start training by running just two scripts.
+Instructions of usage to follow in README.
+
+UPDATE [4th July]
+
+1) Final README - In progress
+2) SRNet Demo upload - DONE
+
+Expected by 5th July 2020 
+>>>>>>> 9f7b34d4bdffa3951912ac739c22997a66a1ad0a
