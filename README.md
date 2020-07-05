@@ -7,6 +7,8 @@ SRNet is a twin discriminator generative adversarial network that can edit text 
 
 ![](media/final.gif)
 
+L - Source ; R - Modified
+
 ----
 ### Architecture changes
 
