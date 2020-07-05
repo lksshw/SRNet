@@ -267,13 +267,13 @@ class text_conversion_net(torch.nn.Module):
         x = torch.cat((x_t, x_s), dim = 1)
 
         y_sk = self.dec_net_1(x, fuse = None)
-        y_sk_out = torch.nn.functional.sigmoid(self.conv_1(y_sk))        
+        y_sk_out = torch.sigmoid(self.conv_1(y_sk))        
         
         y_t = self.dec_net_2(x, fuse = None)
         
         y_t = torch.cat((y_sk, y_t), dim = 1)
         y_t = self.conv_block_1(y_t)
-        y_t_out = torch.nn.functional.tanh(self.conv_2(y_t))
+        y_t_out = torch.tanh(self.conv_2(y_t))
         
         return y_sk_out, y_t_out
                                           
@@ -297,7 +297,7 @@ class inpainting_net(torch.nn.Module):
         
         x, fs = self.dec_net_1(x, fuse = [None] + f_encoder)
         
-        x = torch.nn.functional.tanh(self.conv_1(x))
+        x = torch.tanh(self.conv_1(x))
         
         return x, fs
   
@@ -319,7 +319,7 @@ class fusion_net(torch.nn.Module):
         x = self.enc_net_1(x)
         x = self.res_net_1(x)
         x = self.dec_net_1(x, fuse = fuse)
-        x = torch.nn.functional.tanh(self.conv_1(x))
+        x = torch.tanh(self.conv_1(x))
         
         return x
            

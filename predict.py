@@ -1,5 +1,5 @@
 # Predict script 
-# Niwhskal
+# author: Niwhskal
 
 import os
 import argparse

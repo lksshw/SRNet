@@ -1,3 +1,7 @@
+#author: Niwhskal
+#https://github.com/Niwhskal
+
+
 import torch
 import cfg
 

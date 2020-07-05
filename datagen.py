@@ -64,8 +64,8 @@ class example_dataset(Dataset):
         to_w = int(round(int(w * scale_ratio) / 8)) * 8
         to_scale = (to_h, to_w)
         
-        i_t = resize(i_t, to_scale)
-        i_s = resize(i_s, to_scale)
+        i_t = resize(i_t, to_scale, preserve_range=True)
+        i_s = resize(i_s, to_scale, preserve_range=True)
         
         sample = (i_t, i_s, img_name)
         

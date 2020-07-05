@@ -1,3 +1,4 @@
+# Training script for the SRNet. Refer README for instructions.
 # author: Niwhskal
 # github : https://github.com/Niwhskal/SRNet
 
@@ -47,13 +48,13 @@ def custom_collate(batch):
         i_t, i_s, t_sk, t_t, t_b, t_f, mask_t = item
 
 
-        i_t = resize(i_t, to_scale)
-        i_s = resize(i_s, to_scale)
-        t_sk = np.expand_dims(resize(t_sk, to_scale), axis = -1) 
-        t_t = resize(t_t, to_scale)
-        t_b = resize(t_b, to_scale)  
-        t_f = resize(t_f, to_scale)
-        mask_t = np.expand_dims(resize(mask_t, to_scale), axis = -1)
+        i_t = resize(i_t, to_scale, preserve_range=True)
+        i_s = resize(i_s, to_scale, preserve_range=True)
+        t_sk = np.expand_dims(resize(t_sk, to_scale, preserve_range=True), axis = -1) 
+        t_t = resize(t_t, to_scale, preserve_range=True)
+        t_b = resize(t_b, to_scale, preserve_range=True)  
+        t_f = resize(t_f, to_scale, preserve_range=True)
+        mask_t = np.expand_dims(resize(mask_t, to_scale, preserve_range=True), axis = -1)
 
 
         i_t = i_t.transpose((2, 0, 1))
@@ -127,11 +128,11 @@ def main():
     D1_solver = torch.optim.Adam(D1.parameters(), lr=cfg.learning_rate, betas = (cfg.beta1, cfg.beta2))
     D2_solver = torch.optim.Adam(D2.parameters(), lr=cfg.learning_rate, betas = (cfg.beta1, cfg.beta2))
 
-    g_scheduler = torch.optim.lr_scheduler.MultiStepLR(G_solver, milestones=[30, 200], gamma=0.5)
+    #g_scheduler = torch.optim.lr_scheduler.MultiStepLR(G_solver, milestones=[30, 200], gamma=0.5)
     
-    d1_scheduler = torch.optim.lr_scheduler.MultiStepLR(D1_solver, milestones=[30, 200], gamma=0.5)
+    #d1_scheduler = torch.optim.lr_scheduler.MultiStepLR(D1_solver, milestones=[30, 200], gamma=0.5)
     
-    d2_scheduler = torch.optim.lr_scheduler.MultiStepLR(D2_solver, milestones=[30, 200], gamma=0.5)
+    #d2_scheduler = torch.optim.lr_scheduler.MultiStepLR(D2_solver, milestones=[30, 200], gamma=0.5)
 
     try:
     
@@ -187,9 +188,9 @@ def main():
                     'g_optimizer': G_solver.state_dict(),
                     'd1_optimizer': D1_solver.state_dict(),
                     'd2_optimizer': D2_solver.state_dict(),
-                    'g_scheduler' : g_scheduler.state_dict(),
-                    'd1_scheduler':d1_scheduler.state_dict(),
-                    'd2_scheduler':d2_scheduler.state_dict(),
+                    #'g_scheduler' : g_scheduler.state_dict(),
+                    #'d1_scheduler':d1_scheduler.state_dict(),
+                    #'d2_scheduler':d2_scheduler.state_dict(),
                 },
                 cfg.checkpoint_savedir+f'train_step-{step+1}.model',
             )
@@ -251,8 +252,8 @@ def main():
         D1_solver.step()
         D2_solver.step()
         
-        d1_scheduler.step()
-        d2_scheduler.step()
+        #d1_scheduler.step()
+        #d2_scheduler.step()
         
         clip_grad(D1)
         clip_grad(D2)
@@ -302,7 +303,7 @@ def main():
             
             G_solver.step()
             
-            g_scheduler.step()
+            #g_scheduler.step()
                         
             requires_grad(G, False)
 

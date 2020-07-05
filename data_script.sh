@@ -1,6 +1,7 @@
 #!/bin/bash
 
 #Data setup script for SRNet
+#Author: Niwhskal
 #https://github.com/Niwhskal/
 
 echo "setting up dirs ($(date))"
