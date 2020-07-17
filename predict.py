@@ -59,7 +59,7 @@ def main():
 
     with torch.no_grad():
 
-      for step in tqdm(range(len(example_data)//2)):
+      for step in tqdm(range(len(example_data))):
 
         try:
 
