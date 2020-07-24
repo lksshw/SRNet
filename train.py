@@ -343,10 +343,10 @@ def main():
                 if not os.path.exists(savedir):
                     os.makedirs(savedir)
                 
-                o_sk = F.to_pil_image((o_sk)*255.0)
-                o_t = F.to_pil_image((o_t + 1)*127.5)
-                o_b = F.to_pil_image((o_b + 1)*127.5)
-                o_f = F.to_pil_image((o_f + 1)*127.5)
+                o_sk = F.to_pil_image(o_sk)
+                o_t = F.to_pil_image((o_t + 1)/2)
+                o_b = F.to_pil_image((o_b + 1)/2)
+                o_f = F.to_pil_image((o_f + 1)/2)
                                
                 o_f.save(os.path.join(savedir, name + 'o_f.png'))
                 
