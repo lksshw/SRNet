@@ -57,6 +57,10 @@ def main():
 
     print_log('Predicting', content_color = PrintColor['yellow'])
 
+    G.eval()
+    D1.eval()
+    D2.eval()
+
     with torch.no_grad():
 
       for step in tqdm(range(len(example_data))):
@@ -101,3 +105,4 @@ def main():
 if __name__ == '__main__':
     main()
     print_log('predicting finished.', content_color = PrintColor['yellow'])
+

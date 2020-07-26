@@ -61,7 +61,7 @@ class example_dataset(Dataset):
         h, w = i_t.shape[:2]
         scale_ratio = cfg.data_shape[0] / h
         to_h = cfg.data_shape[0]
-        to_w = int(round(int(w * scale_ratio) / 8)) * 8
+        to_w = 158 #int(round(int(w * scale_ratio) / 8)) * 8
         to_scale = (to_h, to_w)
         
         i_t = resize(i_t, to_scale, preserve_range=True)
