@@ -1,5 +1,12 @@
 # SRNet
 
+**Update** (26th July 2020) : 
+* Pre-trained weights have been uploaded. Please refer to the *Pre-trained weights* section for usage. 
+
+* The latest commit makes a few modifications to the model. Pull all changes before using the pre-trained weights.
+
+---
+
 This repository presents SRNet ([Liang Wu et al](https://arxiv.org/pdf/1908.03047.pdf)), a neural network that tackles the problem of text editing in images. It marks the inception of an area of research that could automate advanced editing mechanisms in the future. 
 
 
@@ -70,7 +77,25 @@ In order to predict, you will need to provide a pair of inputs (The source *i_s*
     ```bash
     $ python3 predict.py --input_dir *data_dir* --save_dir *destination_dir* --checkpoint *path_to_ckpt*
     ```
-Pre-trained weights will be uploaded soon.
+
+### Pre-trained weights
+
+You can download my pre-trained weights [here](https://drive.google.com/file/d/1UiLOywNnlCiyT6MPQ5YvIKw4XxYf93El/view?usp=sharing).
+
+Source     |      Result
+:-------------------------:|:-------------------------:
+
+![](media/pre-trained_result.png)
+---
+
+**Note**: 
+
+* If you notice tearing of images while using the pre-trained weights, image size is the culprit. It can be resolved by resizing all input images to the default shape of *[64, 158]*. 
+
+* In order to infer images of variable size, change the padding of layers in *model.py* and change image shape of example_datatset in *datagen.py*.
+
+* My model has been trained on only two different font styles and is quite basic. Don't expect it to do wonders.
+
 
 ## Demo
 
