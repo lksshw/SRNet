@@ -82,6 +82,8 @@ In order to predict, you will need to provide a pair of inputs (The source *i_s*
 
 You can download my pre-trained weights [here](https://drive.google.com/file/d/1UiLOywNnlCiyT6MPQ5YvIKw4XxYf93El/view?usp=sharing).
 
+Some results from the example directory:
+
 Source     |      Result
 :-------------------------:|:-------------------------:
 
