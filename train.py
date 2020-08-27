@@ -215,7 +215,7 @@ def main():
         #inputs = [i_t, i_s]
         labels = [t_sk, t_t, t_b, t_f]
         
-        o_sk, o_t, o_b, o_f = G(i_t, i_s)
+        o_sk, o_t, o_b, o_f = G(i_t, i_s, (i_t.shape[2], i_t.shape[3])) #Adding dim info
         
         o_sk = K(o_sk)
         o_t = K(o_t)
@@ -259,7 +259,7 @@ def main():
         clip_grad(D2)
         
         
-        if ((step+1) % 5 == 0):
+        if ((step+1) % 2 == 0):
             
             requires_grad(G, True)
 
@@ -268,7 +268,7 @@ def main():
             
             G_solver.zero_grad()
             
-            o_sk, o_t, o_b, o_f = G(i_t, i_s)
+            o_sk, o_t, o_b, o_f = G(i_t, i_s, (i_t.shape[2], i_t.shape[3]))
             
             o_sk = K(o_sk)
             o_t = K(o_t)
@@ -333,7 +333,7 @@ def main():
                 i_s = inp[1].cuda()
                 name = str(inp[2][0])
                 
-                o_sk, o_t, o_b, o_f = G(i_t, i_s)
+                o_sk, o_t, o_b, o_f = G(i_t, i_s, (i_t.shape[2], i_t.shape[3]))
 
                 o_sk = o_sk.squeeze(0).to('cpu')
                 o_t = o_t.squeeze(0).to('cpu')

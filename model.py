@@ -12,8 +12,7 @@ from torchvision.models import vgg19
 from collections import namedtuple
 import cfg
 
-
-
+temp_shape = (0,0)
 
 def calc_padding(h, w, k, s):
     
@@ -76,7 +75,7 @@ class encoder_net(torch.nn.Module):
         
         #--------------------------
         
-        self._pool1 = torch.nn.Conv2d(in_channels = self.cnum, out_channels = 2 * self.cnum, kernel_size = 3, stride = 2, padding = calc_padding(64, 158, 3, 2))
+        self._pool1 = torch.nn.Conv2d(in_channels = self.cnum, out_channels = 2 * self.cnum, kernel_size = 3, stride = 2, padding = calc_padding(temp_shape[0], temp_shape[1], 3, 2))
         
         self._conv2_1 = Conv_bn_block(in_channels = 2* self.cnum, out_channels = 2*self.cnum, kernel_size = 3, stride = 1, padding = 1)
         
@@ -84,7 +83,7 @@ class encoder_net(torch.nn.Module):
         
         #---------------------------
         
-        self._pool2 = torch.nn.Conv2d(in_channels = 2*self.cnum, out_channels = 4* self.cnum, kernel_size = 3, stride = 2, padding = calc_padding(64, 158, 3, 2))
+        self._pool2 = torch.nn.Conv2d(in_channels = 2*self.cnum, out_channels = 4* self.cnum, kernel_size = 3, stride = 2, padding = calc_padding(temp_shape[0], temp_shape[1], 3, 2))
         
         self._conv3_1 = Conv_bn_block(in_channels = 4* self.cnum, out_channels = 4*self.cnum, kernel_size = 3, stride = 1, padding = 1)
         
@@ -92,7 +91,7 @@ class encoder_net(torch.nn.Module):
         
         #---------------------------
         
-        self._pool3 = torch.nn.Conv2d(in_channels = 4*self.cnum, out_channels = 8* self.cnum, kernel_size = 3, stride = 2, padding = calc_padding(64, 158, 3, 2))
+        self._pool3 = torch.nn.Conv2d(in_channels = 4*self.cnum, out_channels = 8* self.cnum, kernel_size = 3, stride = 2, padding = calc_padding(temp_shape[0], temp_shape[1], 3, 2))
         
         self._conv4_1 = Conv_bn_block(in_channels = 8* self.cnum, out_channels = 8*self.cnum, kernel_size = 3, stride = 1, padding = 1)
         
@@ -163,7 +162,7 @@ class decoder_net(torch.nn.Module):
         
         #-----------------
         
-        self._deconv1 = torch.nn.ConvTranspose2d(8*self.cnum, 4*self.cnum, kernel_size = 3, stride = 2, padding = calc_inv_padding(64, 158, 3, 2))
+        self._deconv1 = torch.nn.ConvTranspose2d(8*self.cnum, 4*self.cnum, kernel_size = 3, stride = 2, padding = calc_inv_padding(temp_shape[0], temp_shape[1], 3, 2))
         
         self._conv2_1 = Conv_bn_block(in_channels = fn_mt*mt*4*self.cnum, out_channels = 4*self.cnum, kernel_size = 3, stride = 1, padding = 1)
         
@@ -171,7 +170,7 @@ class decoder_net(torch.nn.Module):
         
         #-----------------
         
-        self._deconv2 = torch.nn.ConvTranspose2d(4*self.cnum, 2*self.cnum, kernel_size =3 , stride = 2, padding = calc_inv_padding(64, 158, 3, 2))
+        self._deconv2 = torch.nn.ConvTranspose2d(4*self.cnum, 2*self.cnum, kernel_size =3 , stride = 2, padding = calc_inv_padding(temp_shape[0], temp_shape[1], 3, 2))
         
         self._conv3_1 = Conv_bn_block(in_channels = fn_mt*mt*2*self.cnum, out_channels = 2*self.cnum, kernel_size = 3, stride = 1, padding = 1)
         
@@ -179,7 +178,7 @@ class decoder_net(torch.nn.Module):
        
         #----------------
         
-        self._deconv3 = torch.nn.ConvTranspose2d(2*self.cnum, self.cnum, kernel_size =3 , stride = 2, padding = calc_inv_padding(64, 158, 3, 2))
+        self._deconv3 = torch.nn.ConvTranspose2d(2*self.cnum, self.cnum, kernel_size =3 , stride = 2, padding = calc_inv_padding(temp_shape[0], temp_shape[1], 3, 2))
         
         self._conv4_1 = Conv_bn_block(in_channels = self.cnum, out_channels = self.cnum, kernel_size = 3, stride = 1, padding = 1)
         self._conv4_2 = Conv_bn_block(in_channels = self.cnum, out_channels = self.cnum, kernel_size = 3, stride = 1, padding = 1)
@@ -330,8 +329,10 @@ class Generator(torch.nn.Module):
         
         self._fn = fusion_net(in_channels)
         
-    def forward(self, i_t, i_s):
+    def forward(self, i_t, i_s, gbl_shape):
                 
+        temp_shape = gbl_shape
+
         o_sk, o_t = self._tcn(i_t, i_s)
         
         o_b, fuse = self._bin(i_s)
@@ -347,16 +348,16 @@ class Discriminator(torch.nn.Module):
         super().__init__()
         
         self.cnum = 32
-        self._conv1 = torch.nn.Conv2d(in_channels, 64, kernel_size = 3, stride = 2, padding = calc_padding(64, 158, 3, 2))
-        self._conv2 = torch.nn.Conv2d(64, 128, kernel_size = 3, stride = 2, padding = calc_padding(64, 158, 3, 2))
+        self._conv1 = torch.nn.Conv2d(in_channels, 64, kernel_size = 3, stride = 2, padding = calc_padding(temp_shape[0], temp_shape[1], 3, 2))
+        self._conv2 = torch.nn.Conv2d(64, 128, kernel_size = 3, stride = 2, padding = calc_padding(temp_shape[0], temp_shape[1], 3, 2))
     
         self._conv2_bn = torch.nn.BatchNorm2d(128)
         
-        self._conv3 = torch.nn.Conv2d(128, 256, kernel_size = 3, stride = 2, padding = calc_padding(64, 158, 3, 2))
+        self._conv3 = torch.nn.Conv2d(128, 256, kernel_size = 3, stride = 2, padding = calc_padding(temp_shape[0], temp_shape[1], 3, 2))
         
         self._conv3_bn = torch.nn.BatchNorm2d(256)
         
-        self._conv4 = torch.nn.Conv2d(256, 512, kernel_size = 3, stride = 2, padding = calc_padding(64, 158, 3, 2))
+        self._conv4 = torch.nn.Conv2d(256, 512, kernel_size = 3, stride = 2, padding = calc_padding(temp_shape[0], temp_shape[1], 3, 2))
         
         self._conv4_bn = torch.nn.BatchNorm2d(512)
         

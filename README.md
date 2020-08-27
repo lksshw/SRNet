@@ -1,7 +1,10 @@
 # SRNet
 **Update** (27th August 2020) :
-There's a bug which prevents training with variable sized images. Hold off on training until it is fixed.
 
+A bug related to variable image size is fixed. You can now train with variable image sizes. This will improve generations significantly. 
+
+Training is now significantly faster. 
+Pull all changes and train as usual.  
 
 **Update** (26th July 2020) : 
 * Pre-trained weights have been uploaded. Please refer to the *Pre-trained weights* section for usage. 
