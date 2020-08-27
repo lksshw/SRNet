@@ -63,7 +63,7 @@ def build_vgg_loss(x):
         
     splited = []
     for i, f in enumerate(x):
-        splited.append(torch.split(f, 2))
+        splited.append(torch.chunk(f, 2))
     l_per = build_perceptual_loss(splited)
     l_style = build_style_loss(splited)
     return l_per, l_style
