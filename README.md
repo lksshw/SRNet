@@ -1,4 +1,7 @@
 # SRNet
+**Update** (27th August 2020) :
+There's a bug which prevents training with variable sized images. Hold off on training until it is fixed.
+
 
 **Update** (26th July 2020) : 
 * Pre-trained weights have been uploaded. Please refer to the *Pre-trained weights* section for usage. 
