@@ -40,7 +40,7 @@ def custom_collate(batch):
         
     to_h = cfg.data_shape[0]
     to_w = w_sum // cfg.batch_size
-    to_w = 158 #int(round(to_w / 8)) * 8
+    to_w = int(round(to_w / 8)) * 8
     to_scale = (to_h, to_w)
     
     for item in batch:
