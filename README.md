@@ -94,15 +94,6 @@ Source     |      Result
 :-------------------------:|:-------------------------:
 
 ![](media/pre-trained_result.png)
----
-
-**Note**: 
-
-* If you notice tearing of images while using the pre-trained weights, image size is the culprit. It can be resolved by resizing all input images to the default shape of *[64, 158]*. 
-
-* In order to infer images of variable size, change the padding of layers in *model.py* and change image shape of example_datatset in *datagen.py*.
-
-* My model has been trained on only two different font styles and is quite basic. Don't expect it to do wonders.
 
 
 ## Demo
