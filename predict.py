@@ -78,7 +78,7 @@ def main():
         i_s = inp[1].to(device)
         name = str(inp[2][0])
 
-        o_sk, o_t, o_b, o_f = G(i_t, i_s)
+        o_sk, o_t, o_b, o_f = G(i_t, i_s, (i_t.shape[2], i_t.shape[3]))
 
         o_sk = o_sk.squeeze(0).detach().to('cpu')
         o_t = o_t.squeeze(0).detach().to('cpu')
