@@ -20,7 +20,7 @@ opencv-contrib-python==4.1.2.30
 opencv-python==4.1.2.30
 openpyxl==2.5.9
 pathlib==1.0.1
-Pillow==8.2.0
+Pillow==8.3.2
 pip-tools==4.5.1
 pydot==1.3.0
 pydot-ng==2.0.0
