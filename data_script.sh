@@ -20,13 +20,14 @@ mkdir -p "fonts/english_ttf/"
 mkdir "bg_data"
 
 echo "Downloading background image names ($(date))"
-wget http://www.robots.ox.ac.uk/~vgg/data/scenetext/preproc/imnames.cp 
+wget https://thor.robots.ox.ac.uk/~vgg/data/scenetext/preproc/imnames.cp 
 
 echo "----------"
 echo "Downloading background images ($(date))"
 
 cd "bg_data"
-wget http://www.robots.ox.ac.uk/~vgg/data/scenetext/preproc/bg_img.tar.gz
+wget https://thor.robots.ox.ac.uk/~vgg/data/scenetext/preproc/bg_img.tar.gz
+
 tar -xzf bg_img.tar.gz
 
 echo "Changing Paths $(date)"

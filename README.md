@@ -1,4 +1,8 @@
 # SRNet
+
+**Update** (15th December 2021):
+Paths to download data-files and pre-trained weights have been updated. 
+
 **Update** (27th August 2020) :
 
 A bug related to variable image size is fixed. You can now train with variable image sizes. This will improve generations significantly. 
@@ -86,7 +90,7 @@ In order to predict, you will need to provide a pair of inputs (The source *i_s*
 
 ### Pre-trained weights
 
-You can download my pre-trained weights [here](https://drive.google.com/file/d/1UiLOywNnlCiyT6MPQ5YvIKw4XxYf93El/view?usp=sharing).
+You can download my pre-trained weights [here](https://drive.google.com/file/d/1PdIPLgy0LXw5G7bYd5rKapF8O53TOiVy/view?usp=sharing).
 
 Some results from the example directory:
 
