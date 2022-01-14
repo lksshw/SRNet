@@ -1,7 +1,7 @@
 # SRNet
 
-**Update** (15th December 2021):
-Paths to download data-files and pre-trained weights have been updated. 
+**Update** (15th Janurary 2022):
+Paths to download data-files have been updated. 
 
 **Update** (27th August 2020) :
 
@@ -90,7 +90,7 @@ In order to predict, you will need to provide a pair of inputs (The source *i_s*
 
 ### Pre-trained weights
 
-You can download my pre-trained weights [here](https://drive.google.com/file/d/1PdIPLgy0LXw5G7bYd5rKapF8O53TOiVy/view?usp=sharing).
+You can download my pre-trained weights [here](https://drive.google.com/file/d/1FMyabJ5ivT3HVUfUeozqOpMqlU68V65K/view?usp=sharing)
 
 Some results from the example directory:
 
