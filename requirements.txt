@@ -14,7 +14,7 @@ matplotlib-venn==0.11.5
 np-utils==0.5.12.1
 numba==0.48.0
 numexpr==2.7.1
-numpy==1.18.5
+numpy==1.22.0
 nvidia-ml-py3==7.352.0
 opencv-contrib-python==4.1.2.30
 opencv-python==4.1.2.30
