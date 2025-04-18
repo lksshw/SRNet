@@ -102,7 +102,7 @@ Source     |      Result
 
 ## Demo
 
-Code for the demo is hastily written and is quite slow. If anyone is interested in trying it out or would like to contribute to it, open an issue, submit a pull request or send me an email at `lakshwin045@gmail.com`. I can host it for you. 
+- A bandaid implementation is at: [demo](https://github.com/lksshw/srnet-demo)
 
 ## References
 
