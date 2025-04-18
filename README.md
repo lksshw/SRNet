@@ -106,10 +106,10 @@ Source     |      Result
 
 ## References
 
-* [Editing Text in the Wild](https://arxiv.org/abs/1908.03047): An innovative idea of using GAN's in an unorthodox manner. 
+* [Editing Text in the Wild](https://arxiv.org/abs/1908.03047)
 
-* [Youdao-ai's original repository](https://github.com/youdao-ai/SRNet): The original tensorflow implementation which helped me understand the paper from a different perspective. Also, credit to youdao for the [data synthesis code](https://github.com/youdao-ai/SRNet-Datagen). If anyone is interested in understanding the way data is synthesized for training, examine his repository.
+* [Youdao-ai's original repository](https://github.com/youdao-ai/SRNet)
 
-* [SynthText project](https://github.com/ankush-me/SynthText): This work provides the background dataset that is instrumental for data synthesis.
+* [SynthText project](https://github.com/ankush-me/SynthText)
 
-* [Streamlit docs](https://www.streamlit.io/): One of the best libraries to build and publish apps. Severely underrated.
+* [Streamlit docs](https://www.streamlit.io/)
